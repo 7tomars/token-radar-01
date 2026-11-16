@@ -269,6 +269,21 @@
     );
   }
 
+  function farmStrip() {
+    var top = DATA.rows.slice().sort(function (a, b) { return b.farm.net_low_usd - a.farm.net_low_usd; }).slice(0, 3);
+    return el('section', { class: 'strip' },
+      el('span', { class: 'strip-label', text: 'Best farms at the low band' }),
+      top.map(function (r) {
+        return el('button', { type: 'button', class: 'strip-item', onclick: function () { openDetail(r.slug); } },
+          el('b', { text: r.name }),
+          el('span', { class: 'num pos', text: fmtSigned(r.farm.net_low_usd) + ' net' }),
+          el('span', { class: 'sub', text: 'break-even ' + r.farm.breakeven_pct + '%' })
+        );
+      }),
+      el('span', { class: 'sub strip-note', text: 'Ranked by net at the band\u2019s low end, not by launch size: the three biggest launches are all Skip.' })
+    );
+  }
+
   function modelPanel() {
     var fit = DATA.fit;
     var m = DATA.model;
@@ -358,6 +373,7 @@
     shell.appendChild(header());
     shell.appendChild(lede());
     shell.appendChild(controls());
+    if (state.tab === 'pre-token') shell.appendChild(farmStrip());
     shell.appendChild(state.tab === 'pre-token' ? boardTable() : liveTable());
     if (state.tab === 'pre-token') shell.appendChild(modelPanel());
     app.appendChild(shell);
