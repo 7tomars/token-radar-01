@@ -136,6 +136,7 @@ export interface BoardRow {
   gecko_id: string | null;
   symbol: string | null;
   token_status: 'pre-token';
+  watchlist: boolean;
   age_days: number | null;
   implied_value_usd: number;
   implied_low_usd: number;
@@ -532,6 +533,7 @@ export function buildBoard(snapshot: Snapshot, fit: FitStats, model: ModelConsta
     gecko_id: s.p.gecko_id,
     symbol: s.p.symbol,
     token_status: 'pre-token' as const,
+    watchlist: snapshot.watchlist.includes(s.p.slug),
     age_days: s.v.age,
     implied_value_usd: s.v.implied,
     implied_low_usd: s.impliedLow,
