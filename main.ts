@@ -6,9 +6,10 @@
 // the summary the judge reads, with the vendored make.fun library.
 //
 // The dashboard is a static page, no framework and no network: dashboard/index.html, dashboard/app.css
-// and dashboard/app.js read /output/data.js, which this program writes from the same board. A starting
-// point, not a winner: it covers the watchlist, states the model and gives every protocol a farm plan.
-// Change the model, the page or the plan; keep the gate's shape.
+// and dashboard/app.js read /output/data.js, which this program writes from the same board. The model
+// is radar-2 (lib/model.ts): a size curve fitted at run time on the snapshot's own traded protocols,
+// backtested leave-one-out and on a holdout, with a farm verdict netted at the band's low end for
+// every protocol. One model prices the board, the page and board.json, so they cannot disagree.
 //
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input ../input/snapshot.json
@@ -87,5 +88,6 @@ writeFileSync(join(out, 'dossier.json'), buildDossier(out, { text_max_bytes: TEX
 
 process.stdout.write(
   `token radar: ${snapshot.protocols.length} protocols, ${snapshot.watchlist.length} on the watchlist, ${board.length} rows scored (${radar.early_size} early, ${radar.live_size} live set aside)\n` +
+    `token radar: radar-2 fit on ${radar.fit.clean_comps} clean comps of ${radar.fit.comps}: log(mcap) = ${radar.fit.intercept} + ${radar.fit.slope} x log(tvl); LOO median fold x${radar.fit.loo_median_fold}, holdout x${radar.fit.holdout_median_fold}\n` +
     `token radar: wrote ${join(out, 'board.json')}, ${join(out, 'data.js')}, ${join(out, 'dashboard')} (3 files), ${join(out, 'screenshots')} (${shots.length} images) and ${join(out, 'dossier.json')}\n`,
 );
